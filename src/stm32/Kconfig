@@ -201,7 +201,7 @@ config STM32F103_ALT_ADC
     depends on MACH_STM32F103 && LOW_LEVEL_OPTIONS
     default n
     help
-        The Nation N32G452 is a clone of the STM32F103 mcu. 
+        The Nation clone of the STM32F103 mcu may not work correctly. 
         This cortex-M4 chip is very similar to F103 but has a
         have different ADC. Enable this option to change the ADC.
 
