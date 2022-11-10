@@ -63,6 +63,11 @@ The stm32f1 directory contains code from:
 version v1.8.0 (441b2cbdc25aa50437a59c4bffe22b88e78942c9). Contents
 taken from the Drivers/CMSIS/Device/ST/STM32F1xx/ directory.
 
+The stm32f1/include/component directory contains code from:
+  https://github.com/stas2z/klipper-aquila-n32
+revision a772e32cba8fff0b8ee77a9dbc74a57be6e9981d. Contents
+taken from the src/stm32/ directory.
+
 The stm32f2 directory contains code from:
   https://github.com/STMicroelectronics/STM32CubeF2
 version v1.9.0 (42fc8bf966c04ef814bb0620dcd3e036e038b4a2). Contents
