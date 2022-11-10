@@ -215,7 +215,7 @@ typedef enum
   */
 
 // 
-#if STM32F103_ALT_ADC == 1
+#if CONFIG_STM32F103_ALT_ADC == 1
 #include "component/nation_adc.h"
 #endif
 
