@@ -12,16 +12,13 @@
 #include "gpio.h" // gpio_adc_setup
 #include "internal.h" // GPIO
 #include "sched.h" // sched_shutdown
-#if CONFIG_N32G452 == 1
-#include "board/n32g452.h"
-#endif
 
 DECL_CONSTANT("ADC_MAX", 4095);
 
 #define ADC_TEMPERATURE_PIN 0xfe
 DECL_ENUMERATION("pin", "ADC_TEMPERATURE", ADC_TEMPERATURE_PIN);
 
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
 static const uint8_t adc_pins[] = {
     /* ADC1 */
     0, GPIO('A', 0), GPIO('A', 1), GPIO('A', 6),
@@ -96,14 +93,14 @@ static const uint8_t adc_pins[] = {
 
 // Perform calibration on stm32f103
 static void
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
 adc_calibrate(ADC_Module *adc)
 #else
 adc_calibrate(ADC_TypeDef *adc)
 #endif
 {
 #if CONFIG_MACH_STM32F1
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
     adc->CTRL2 = CTRL2_AD_ON_SET;
     while (!(adc->CTRL3 & ADC_FLAG_RDY))
         ;
@@ -138,7 +135,7 @@ gpio_adc_setup(uint32_t pin)
     }
 
     // Determine which ADC block to use
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
     ADC_Module *adc /*= NS_ADC1*/;
     if ((chan >> 5) == 0)
         adc = NS_ADC1;
@@ -163,7 +160,7 @@ gpio_adc_setup(uint32_t pin)
 #endif
 
     // Enable the ADC
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
     uint32_t reg_temp;
     reg_temp = ADC_RCC_AHBPCLKEN;
     reg_temp |= (RCC_AHB_PERIPH_ADC1 | RCC_AHB_PERIPH_ADC2 |
@@ -207,7 +204,7 @@ gpio_adc_setup(uint32_t pin)
 #elif !CONFIG_MACH_STM32F1
         ADC123_COMMON->CCR = ADC_CCR_TSVREFE;
 #endif
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
         NS_ADC1->CTRL2 |= CTRL2_TSVREFE_SET;
         VREF1P2_CTRL |= (1<<10);
 #endif
@@ -224,7 +221,7 @@ gpio_adc_setup(uint32_t pin)
 uint32_t
 gpio_adc_sample(struct gpio_adc g)
 {
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
     ADC_Module *adc = g.adc;
     uint32_t sr = adc->STS;
     if (sr & ADC_STS_STR) {
@@ -264,7 +261,7 @@ need_delay:
 uint16_t
 gpio_adc_read(struct gpio_adc g)
 {
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
     ADC_Module *adc = g.adc;
     uint16_t result = adc->DAT;
     adc->STS &= ~ADC_STS_STR;
@@ -282,7 +279,7 @@ void
 gpio_adc_cancel_sample(struct gpio_adc g)
 {
     irqstatus_t flag = irq_save();
-#if CONFIG_N32G452 == 1
+#if STM32F103_ALT_ADC == 1
     ADC_Module *adc = g.adc;
     if (adc->STS & ADC_STS_STR)
         gpio_adc_read(g);
